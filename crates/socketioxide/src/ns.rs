@@ -134,6 +134,8 @@ impl<A: Adapter> Namespace<A> {
             #[cfg(feature = "tracing")]
             tracing::debug!("error sending connect packet: {:?}, closing conn", _e);
             esocket.close(engineioxide::DisconnectReason::PacketParsingError);
+            self.sockets.write().unwrap().remove(&sid);
+
             return Err(ConnectFail);
         }
 
