@@ -104,9 +104,6 @@ impl<A: Adapter> Namespace<A> {
         esocket: Arc<engineioxide::Socket<SocketData<A>>>,
         auth: Option<Value>,
     ) -> Result<(), ConnectFail> {
-        if rand::random_bool(0.5) {
-            tokio::time::sleep(Duration::from_secs(50)).await;
-        }
         let socket: Arc<Socket<A>> =
             Socket::new(sid, self.clone(), esocket.clone(), self.parser).into();
 
@@ -137,8 +134,6 @@ impl<A: Adapter> Namespace<A> {
             #[cfg(feature = "tracing")]
             tracing::debug!("error sending connect packet: {:?}, closing conn", _e);
             esocket.close(engineioxide::DisconnectReason::PacketParsingError);
-            // self.sockets.write().unwrap().remove(&sid);
-
             return Err(ConnectFail);
         }
 
